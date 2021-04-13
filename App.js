@@ -1,21 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import AppLoading from "expo-app-loading";
+import { bootstrap } from "./src/bootstrap";
+import { AppNavigation } from "./src/navigation/AppNavigation";
+import { Provider } from "react-redux";
+import store from "./src/store";
+// import { LogBox } from "react-native";
 
-export default function App() {
+// LogBox.ignoreLogs(["Non-serializable values were found in the navigation state"]);
+
+const App = () => {
+  const [isReady, setIsReady] = useState(false);
+  console.log(isReady);
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={bootstrap}
+        onFinish={() => setIsReady(true)}
+        onError={(e) => console.log(e)}
+      />
+    );
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <AppNavigation />
+    </Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
